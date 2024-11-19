@@ -1,0 +1,22 @@
+LOCATION: catch_reporter_junit.cpp in catch2 src
+
+std::string getCurrentTimestamp() 
+{
+            std::time_t rawtime;
+    std::time(&rawtime);
+
+    std::tm timeInfo = {};
+
+#if defined(_MSC_VER) || defined(__MINGW32__)
+    #ifdef _MSC_VER
+    #define _CRT_SECURE_NO_WARNINGS
+    #endif
+    #pragma warning(push)
+    #pragma warning(disable: 4996)
+    gmtime(&rawtime); // Use non-secure version for Visual Studio and MinGW
+    #pragma warning(pop)
+#elif defined(CATCH_PLATFORM_PLAYSTATION)
+    gmtime_s(&rawtime, &timeInfo);
+#else
+    gmtime_r(&rawtime, &timeInfo);
+#endif
